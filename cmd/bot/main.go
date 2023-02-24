@@ -35,5 +35,7 @@ func main() {
 	productService := product.NewService()
 	command := command.NewCommand(bot, *productService)
 
-	command.HandleUpdate(&updates)
+	for update := range updates {
+		command.HandleUpdate(update)
+	}
 }
