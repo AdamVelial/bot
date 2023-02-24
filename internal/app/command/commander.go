@@ -1,10 +1,6 @@
 package command
 
 import (
-	"encoding/json"
-	"fmt"
-	"log"
-
 	"github.com/AdamVelial/bot/internal/service/product"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
@@ -22,20 +18,8 @@ func NewCommand(bot *tgbotapi.BotAPI, productsService product.Service) *Command 
 }
 
 func (c *Command) HandleUpdate(update tgbotapi.Update) {
-
 	if update.CallbackQuery != nil {
-		paresed := PaginationQuery{}
-		err := json.Unmarshal([]byte(update.CallbackQuery.Data), &paresed)
-		if err != nil {
-			log.Printf("Error: %v", err)
-		}
-
-		msg := tgbotapi.NewMessage(
-			update.CallbackQuery.Message.Chat.ID,
-			fmt.Sprintf("parsed data: %+v", paresed),
-		)
-
-		c.bot.Send(msg)
+		c.PaginationList(update.Message, update.CallbackQuery)
 		return
 	}
 
