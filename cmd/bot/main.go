@@ -35,18 +35,5 @@ func main() {
 	productService := product.NewService()
 	command := command.NewCommand(bot, *productService)
 
-	for update := range updates {
-		if update.Message == nil {
-			continue
-		}
-
-		switch update.Message.Command() {
-		case "help":
-			command.Help(update.Message)
-		case "list":
-			command.List(update.Message)
-		default:
-			command.Defualt(update.Message)
-		}
-	}
+	command.HandleUpdate(&updates)
 }
