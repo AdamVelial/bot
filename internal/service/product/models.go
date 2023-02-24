@@ -6,6 +6,8 @@ var allProducts = []Product{
 	{Title: "thr"},
 	{Title: "four"},
 	{Title: "five"},
+	{Title: "six"},
+	{Title: "seven"},
 }
 
 type Product struct {

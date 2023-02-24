@@ -29,3 +29,12 @@ func (s *Service) Set(index int, newTitle string) error {
 	allProducts[index].Title = newTitle
 	return nil
 }
+
+func (s *Service) Delete(index int) error {
+	if index < 0 || len(allProducts) < index {
+		return errors.New(fmt.Sprintf("Fail to find product with index: %d", index))
+	}
+
+	allProducts = append(allProducts[:index], allProducts[index+1:]...)
+	return nil
+}

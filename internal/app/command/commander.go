@@ -1,6 +1,8 @@
 package command
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 
 	"github.com/AdamVelial/bot/internal/service/product"
@@ -21,12 +23,18 @@ func NewCommand(bot *tgbotapi.BotAPI, productsService product.Service) *Command 
 
 func (c *Command) HandleUpdate(update tgbotapi.Update) {
 
-	log.Println(update.CallbackQuery)
 	if update.CallbackQuery != nil {
+		paresed := PaginationQuery{}
+		err := json.Unmarshal([]byte(update.CallbackQuery.Data), &paresed)
+		if err != nil {
+			log.Printf("Error: %v", err)
+		}
+
 		msg := tgbotapi.NewMessage(
 			update.CallbackQuery.Message.Chat.ID,
-			"Data:"+update.CallbackQuery.Message.Text,
+			fmt.Sprintf("parsed data: %+v", paresed),
 		)
+
 		c.bot.Send(msg)
 		return
 	}
@@ -44,8 +52,9 @@ func (c *Command) HandleUpdate(update tgbotapi.Update) {
 		c.Get(update.Message)
 	case "set":
 		c.Set(update.Message)
+	case "delete":
+		c.Delete(update.Message)
 	default:
 		c.Defualt(update.Message)
 	}
-
 }
